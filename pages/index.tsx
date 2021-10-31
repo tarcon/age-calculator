@@ -10,6 +10,7 @@ export default function Home() {
   const { register, handleSubmit, formState: { errors } } = useForm<
     FormValues
   >();
+
   const onSubmit = async (data: FormValues) => {
     const response = await fetch("/api/age/calculate/" + data.yearOfBirth);
     const responseData = await response.json();
@@ -26,10 +27,7 @@ export default function Home() {
             <label htmlFor="yearOfBirth">Year of birth</label>
             <input
               {...register("yearOfBirth", {
-                validate: (value: string) => {
-                  return !!value && value.length === 4 &&
-                    !isNaN(parseInt(value));
-                },
+                validate: isNumberOfFourDigits(),
               })}
               name="yearOfBirth"
               type="text"
@@ -54,4 +52,11 @@ export default function Home() {
       </form>
     </div>
   );
+}
+
+function isNumberOfFourDigits() {
+  return (value: string) => {
+    return !!value && value.length === 4 &&
+      !isNaN(parseInt(value));
+  };
 }
